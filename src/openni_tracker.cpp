@@ -188,12 +188,12 @@ void publishTransforms(const std::string& frame_id)
     }
 }
 
-#define CHECK_RC(nRetVal, what)                                        \
+#define CHECK_RC(nRetVal, what)                                     \
     if (nRetVal != XN_STATUS_OK)                                    \
-    {                                                                \
+    {                                                               \
         RCLCPP_INFO(rclcpp::get_logger("rclcpp"),                   \
             "%s failed: %s", what, xnGetStatusString(nRetVal));     \
-        return nRetVal;                                                \
+        return nRetVal;                                             \
     }
 
 int main(int argc, char * argv[])
