@@ -26,13 +26,13 @@ User_NewUser(
     XnUserID nId, 
     void* pCookie)
 {
-	RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "New User %d", nId);
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "New User %d", nId);
 
-	if (g_bNeedPose)
+    if (g_bNeedPose)
         g_UserGenerator.GetPoseDetectionCap().StartPoseDetection(
             g_strPose, nId);
-	else
-		g_UserGenerator.GetSkeletonCap().RequestCalibration(
+    else
+        g_UserGenerator.GetSkeletonCap().RequestCalibration(
             nId, TRUE);
 }
 
@@ -42,7 +42,7 @@ User_LostUser(
     XnUserID nId, 
     void* pCookie)
 {
-	RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
         "Lost user %d", nId);
 }
 
@@ -52,7 +52,7 @@ UserCalibration_CalibrationStart(
     XnUserID nId, 
     void* pCookie)
 {
-	RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
         "Calibration started for user %d", nId);
 }
 
@@ -63,21 +63,21 @@ UserCalibration_CalibrationEnd(
     XnBool bSuccess, 
     void* pCookie)
 {
-	if (bSuccess) {
-		RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+    if (bSuccess) {
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
             "Calibration complete, start tracking user %d", nId);
-		g_UserGenerator.GetSkeletonCap().StartTracking(nId);
-	}
-	else {
-		RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+        g_UserGenerator.GetSkeletonCap().StartTracking(nId);
+    }
+    else {
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
             "Calibration failed for user %d", nId);
-		if (g_bNeedPose)
-			g_UserGenerator.GetPoseDetectionCap().StartPoseDetection(
+        if (g_bNeedPose)
+            g_UserGenerator.GetPoseDetectionCap().StartPoseDetection(
                 g_strPose, nId);
-		else
-			g_UserGenerator.GetSkeletonCap().RequestCalibration(
+        else
+            g_UserGenerator.GetSkeletonCap().RequestCalibration(
                 nId, TRUE);
-	}
+    }
 }
 
 void XN_CALLBACK_TYPE 
@@ -116,8 +116,8 @@ void publishTransform(
 
     XnFloat* m = joint_orientation.orientation.elements;
     KDL::Rotation rotation(m[0], m[1], m[2],
-    					   m[3], m[4], m[5],
-    					   m[6], m[7], m[8]);
+                           m[3], m[4], m[5],
+                           m[6], m[7], m[8]);
     double qx, qy, qz, qw;
     rotation.GetQuaternion(qx, qy, qz, qw);
 
@@ -188,13 +188,13 @@ void publishTransforms(const std::string& frame_id)
     }
 }
 
-#define CHECK_RC(nRetVal, what)								        \
-	if (nRetVal != XN_STATUS_OK)							        \
-	{														        \
-		RCLCPP_INFO(rclcpp::get_logger("rclcpp"),                   \
+#define CHECK_RC(nRetVal, what)                                        \
+    if (nRetVal != XN_STATUS_OK)                                    \
+    {                                                                \
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"),                   \
             "%s failed: %s", what, xnGetStatusString(nRetVal));     \
-		return nRetVal;										        \
-	}
+        return nRetVal;                                                \
+    }
 
 int main(int argc, char * argv[])
 {
@@ -210,58 +210,58 @@ int main(int argc, char * argv[])
     nRetVal = g_Context.FindExistingNode(XN_NODE_TYPE_DEPTH, g_DepthGenerator);
     CHECK_RC(nRetVal, "Find depth generator");
 
-	nRetVal = g_Context.FindExistingNode(XN_NODE_TYPE_USER, g_UserGenerator);
-	if (nRetVal != XN_STATUS_OK)
+    nRetVal = g_Context.FindExistingNode(XN_NODE_TYPE_USER, g_UserGenerator);
+    if (nRetVal != XN_STATUS_OK)
     {
-		nRetVal = g_UserGenerator.Create(g_Context);
-	    if (nRetVal != XN_STATUS_OK)
+        nRetVal = g_UserGenerator.Create(g_Context);
+        if (nRetVal != XN_STATUS_OK)
         {
-		    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
                 "NITE is likely missing: Please install NITE >= 1.5.2.21. "
                 "Check the readme for download information. Error Info: User "
                 "generator failed: %s", xnGetStatusString(nRetVal));
             return nRetVal;
-	    }
-	}
+        }
+    }
 
-	if (!g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_SKELETON))
+    if (!g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_SKELETON))
     {
-		RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
             "Supplied user generator doesn't support skeleton");
-		return 1;
-	}
+        return 1;
+    }
 
     XnCallbackHandle hUserCallbacks;
-	g_UserGenerator.RegisterUserCallbacks(User_NewUser, User_LostUser, 
+    g_UserGenerator.RegisterUserCallbacks(User_NewUser, User_LostUser, 
         NULL, hUserCallbacks);
 
-	XnCallbackHandle hCalibrationCallbacks;
-	g_UserGenerator.GetSkeletonCap().RegisterCalibrationCallbacks(
+    XnCallbackHandle hCalibrationCallbacks;
+    g_UserGenerator.GetSkeletonCap().RegisterCalibrationCallbacks(
         UserCalibration_CalibrationStart, UserCalibration_CalibrationEnd, 
         NULL, hCalibrationCallbacks);
 
-	if (g_UserGenerator.GetSkeletonCap().NeedPoseForCalibration())
+    if (g_UserGenerator.GetSkeletonCap().NeedPoseForCalibration())
     {
-		g_bNeedPose = TRUE;
-		if (!g_UserGenerator.IsCapabilitySupported(
+        g_bNeedPose = TRUE;
+        if (!g_UserGenerator.IsCapabilitySupported(
             XN_CAPABILITY_POSE_DETECTION))
         {
-			RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
                 "Pose required, but not supported");
-			return 1;
-		}
+            return 1;
+        }
 
-		XnCallbackHandle hPoseCallbacks;
-		g_UserGenerator.GetPoseDetectionCap().RegisterToPoseCallbacks(
+        XnCallbackHandle hPoseCallbacks;
+        g_UserGenerator.GetPoseDetectionCap().RegisterToPoseCallbacks(
             UserPose_PoseDetected, NULL, NULL, hPoseCallbacks);
 
-		g_UserGenerator.GetSkeletonCap().GetCalibrationPose(g_strPose);
-	}
+        g_UserGenerator.GetSkeletonCap().GetCalibrationPose(g_strPose);
+    }
 
-	g_UserGenerator.GetSkeletonCap().SetSkeletonProfile(XN_SKEL_PROFILE_ALL);
+    g_UserGenerator.GetSkeletonCap().SetSkeletonProfile(XN_SKEL_PROFILE_ALL);
 
-	nRetVal = g_Context.StartGeneratingAll();
-	CHECK_RC(nRetVal, "StartGenerating");
+    nRetVal = g_Context.StartGeneratingAll();
+    CHECK_RC(nRetVal, "StartGenerating");
 
     g_node->declare_parameter("frame_id", "camera_depth_frame");
     std::string frame_id = g_node->get_parameter("frame_id").as_string();
@@ -270,13 +270,13 @@ int main(int argc, char * argv[])
                 
     while (rclcpp::ok())
     {
-		g_Context.WaitAndUpdateAll();
-		publishTransforms(frame_id);
-		r.sleep();
-	}
+        g_Context.WaitAndUpdateAll();
+        publishTransforms(frame_id);
+        r.sleep();
+    }
 
-	g_Context.Shutdown();
+    g_Context.Shutdown();
     rclcpp::shutdown();
 
-	return 0;
+    return 0;
 }
