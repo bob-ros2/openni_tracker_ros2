@@ -26,7 +26,7 @@ User_NewUser(
     XnUserID nId, 
     void* pCookie)
 {
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "New User %d", nId);
+    RCLCPP_INFO(g_node->get_logger(), "New User %d", nId);
 
     if (g_bNeedPose)
         g_UserGenerator.GetPoseDetectionCap().StartPoseDetection(
@@ -42,7 +42,7 @@ User_LostUser(
     XnUserID nId, 
     void* pCookie)
 {
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+    RCLCPP_INFO(g_node->get_logger(), 
         "Lost user %d", nId);
 }
 
@@ -52,7 +52,7 @@ UserCalibration_CalibrationStart(
     XnUserID nId, 
     void* pCookie)
 {
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+    RCLCPP_INFO(g_node->get_logger(), 
         "Calibration started for user %d", nId);
 }
 
@@ -64,12 +64,12 @@ UserCalibration_CalibrationEnd(
     void* pCookie)
 {
     if (bSuccess) {
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+        RCLCPP_INFO(g_node->get_logger(), 
             "Calibration complete, start tracking user %d", nId);
         g_UserGenerator.GetSkeletonCap().StartTracking(nId);
     }
     else {
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+        RCLCPP_INFO(g_node->get_logger(), 
             "Calibration failed for user %d", nId);
         if (g_bNeedPose)
             g_UserGenerator.GetPoseDetectionCap().StartPoseDetection(
@@ -87,7 +87,7 @@ UserPose_PoseDetected(
     XnUserID nId, 
     void* pCookie) 
 {
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+    RCLCPP_INFO(g_node->get_logger(), 
         "Pose %s detected for user %d", strPose, nId);
     g_UserGenerator.GetPoseDetectionCap().StopPoseDetection(nId);
     g_UserGenerator.GetSkeletonCap().RequestCalibration(nId, TRUE);
@@ -191,7 +191,7 @@ void publishTransforms(const std::string& frame_id)
 #define CHECK_RC(nRetVal, what)                                     \
     if (nRetVal != XN_STATUS_OK)                                    \
     {                                                               \
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"),                   \
+        RCLCPP_INFO(g_node->get_logger(),                   \
             "%s failed: %s", what, xnGetStatusString(nRetVal));     \
         return nRetVal;                                             \
     }
@@ -216,7 +216,7 @@ int main(int argc, char * argv[])
         nRetVal = g_UserGenerator.Create(g_Context);
         if (nRetVal != XN_STATUS_OK)
         {
-            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+            RCLCPP_INFO(g_node->get_logger(), 
                 "NITE is likely missing: Please install NITE >= 1.5.2.21. "
                 "Check the readme for download information. Error Info: User "
                 "generator failed: %s", xnGetStatusString(nRetVal));
@@ -226,7 +226,7 @@ int main(int argc, char * argv[])
 
     if (!g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_SKELETON))
     {
-        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+        RCLCPP_INFO(g_node->get_logger(), 
             "Supplied user generator doesn't support skeleton");
         return 1;
     }
@@ -246,7 +246,7 @@ int main(int argc, char * argv[])
         if (!g_UserGenerator.IsCapabilitySupported(
             XN_CAPABILITY_POSE_DETECTION))
         {
-            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+            RCLCPP_INFO(g_node->get_logger(), 
                 "Pose required, but not supported");
             return 1;
         }
