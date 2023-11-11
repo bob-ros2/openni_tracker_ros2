@@ -47,3 +47,38 @@ ros2 run openni_tracker_ros2 openni_tracker
 ## Node Parameter
 > ~frame_id (string, default: camera_depth_frame)\
 Anchor frame_id of skeleton frames.
+
+## ROS Node skeleton_markers
+
+### Usage
+
+```bash
+# start the node.
+ros2 run openni_tracker_ros2 skeleton_marker
+```
+
+## Node Parameter
+
+> ~color: (double array, default: [0.0, 1.0, 0.0, 1.0])\
+Marker color rgba.
+
+> ~fixed_frame (string, default: camera_depth_frame)\
+The fixed reference frame.
+
+> ~id: (int, default: 0)\
+Marker id.
+
+> ~lifetime: (int, default: 0)\
+Duration of markers in RViz; 0 is forever.
+
+> ~ns (string, default: skeleton_markers)\
+Marker namespace.
+
+> ~rate (int, default: 30)\
+Update rate.
+
+> ~scale (double, default: 0.07)\
+Height and width of markers in meters.
+
+> ~skeleton_frames (string array)\
+List of frames to show as Marker.
