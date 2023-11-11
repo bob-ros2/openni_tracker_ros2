@@ -70,6 +70,12 @@ install(FILES
     DESTINATION share/${PROJECT_NAME}
 )
 
+install(DIRECTORY
+  launch
+  config
+  DESTINATION share/${PROJECT_NAME}/
+)
+
 # testing
 
 if(BUILD_TESTING)
