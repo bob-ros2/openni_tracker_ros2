@@ -27,9 +27,6 @@ link_directories(${orocos_kdl_LIBRARY_DIRS})
 
 add_executable(openni_tracker src/openni_tracker.cpp)
 
-find_package(tf2 REQUIRED)
-find_package(tf2_ros REQUIRED)
-
 target_link_libraries(
     openni_tracker
 	${OpenNI_LIBRARIES}
