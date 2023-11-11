@@ -191,7 +191,7 @@ void publishTransforms(const std::string& frame_id)
 #define CHECK_RC(nRetVal, what)                                     \
     if (nRetVal != XN_STATUS_OK)                                    \
     {                                                               \
-        RCLCPP_INFO(g_node->get_logger(),                   \
+        RCLCPP_INFO(g_node->get_logger(),                           \
             "%s failed: %s", what, xnGetStatusString(nRetVal));     \
         return nRetVal;                                             \
     }
