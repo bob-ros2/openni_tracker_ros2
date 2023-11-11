@@ -40,8 +40,14 @@ colcon build
 ### Usage
 
 ```bash
-# start the node.
+# start the node
 ros2 run openni_tracker_ros2 openni_tracker
+
+# launch nodes openni_tracker and skeleton_markers
+ros2 launch openni_tracker_ros2 openni_tracker.launch.py
+
+# launch node openni_tracker without node skeleton_markers
+ros2 launch openni_tracker_ros2 openni_tracker.launch.py openni_tracker:=false
 ```
 
 ## Node Parameter
