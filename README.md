@@ -55,6 +55,7 @@ ros2 launch openni_tracker_ros2 openni_tracker.launch.py openni_tracker:=false
 Anchor frame_id of skeleton frames.
 
 ## ROS Node skeleton_markers
+This ROS node publishes a Marker array based on tf2 transform from opnenni_tracker node.
 
 ### Usage
 
