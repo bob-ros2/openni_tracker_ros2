@@ -9,6 +9,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(orocos_kdl REQUIRED)
@@ -24,6 +25,8 @@ include_directories(
 )
 
 link_directories(${orocos_kdl_LIBRARY_DIRS})
+
+# openni_tracker
 
 add_executable(openni_tracker src/openni_tracker.cpp)
 
@@ -41,8 +44,24 @@ ament_target_dependencies(
     tf2
 )
 
+# skeleton_markers
+
+add_executable(skeleton_markers src/skeleton_markers.cpp)
+
+ament_target_dependencies(
+    skeleton_markers
+    geometry_msgs
+    visualization_msgs
+    rclcpp
+    tf2_ros
+    tf2
+)
+
+# install
+
 install(TARGETS
     openni_tracker
+    skeleton_markers
     DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -52,6 +71,7 @@ install(FILES
 )
 
 # testing
+
 if(BUILD_TESTING)
     find_package(ament_lint_auto REQUIRED)
     set(ament_cmake_copyright_FOUND TRUE)
