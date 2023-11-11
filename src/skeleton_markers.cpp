@@ -11,7 +11,7 @@
 
 using namespace rclcpp;
 
-class SkeletonMarkers : public rclcpp::Node
+class SkeletonMarkers : public Node
 {
     Publisher<visualization_msgs::msg::Marker>::SharedPtr publisher_{nullptr};
     std::unique_ptr<tf2_ros::Buffer>                      tf_buffer_;
@@ -19,13 +19,12 @@ class SkeletonMarkers : public rclcpp::Node
     TimerBase::SharedPtr                                  timer_{nullptr};
     std::string                                           fixed_frame_;
     std::vector<std::string>                              skeleton_frames_;
-    std::vector<double>                                   color_;
     visualization_msgs::msg::Marker                       marker_;
 
 public:
 
     SkeletonMarkers()
-        : Node("skeleton_markers")
+    : Node("skeleton_markers")
     {
         fixed_frame_ = this->declare_parameter(
             "fixed_frame", "camera_depth_frame");
@@ -102,7 +101,7 @@ private:
                         tf2::TimePointZero);
                     RCLCPP_DEBUG(this->get_logger(),"skeleton_detected");
 
-                    for (auto & frame : skeleton_frames_)
+                    for (auto& frame : skeleton_frames_)
                     {
                         // Append the user_index to the frame name
                         auto skel_frame = frame + "_" + user_index;
@@ -131,12 +130,12 @@ private:
 
     void initialize_marker()
     {
+        std::vector<double> color{0.0, 1.0, 0.0, 1.0};
+        color         = this->declare_parameter("color", color);
         auto scale    = this->declare_parameter("scale", 0.07);
         auto lifetime = this->declare_parameter("lifetime", 0);
         auto id       = this->declare_parameter("id", 0);
         auto ns       = this->declare_parameter("ns", "skeleton_markers");
-        color_        = {0.0, 1.0, 0.0, 1.0};
-        color_        = this->declare_parameter("color", color_);
         
         marker_.header.frame_id = fixed_frame_;
         marker_.ns = ns;
@@ -146,14 +145,14 @@ private:
         marker_.lifetime = rclcpp::Duration(lifetime, 0);
         marker_.scale.x = scale;
         marker_.scale.y = scale;
-        marker_.color.r = color_[0];
-        marker_.color.g = color_[1];
-        marker_.color.b = color_[2];
-        marker_.color.a = color_[3];
+        marker_.color.r = color[0];
+        marker_.color.g = color[1];
+        marker_.color.b = color[2];
+        marker_.color.a = color[3];
     }
 };
 
-int main(int argc, char * argv[])
+int main(int argc, char** argv)
 {
     rclcpp::init(argc, argv);
     rclcpp::spin(std::make_shared<SkeletonMarkers>());
