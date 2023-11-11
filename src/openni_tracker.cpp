@@ -93,7 +93,6 @@ UserPose_PoseDetected(
     g_UserGenerator.GetSkeletonCap().RequestCalibration(nId, TRUE);
 }
 
-
 void publishTransform(
     XnUserID const& user, 
     XnSkeletonJoint const& joint, 
