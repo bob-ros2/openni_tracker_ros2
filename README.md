@@ -40,7 +40,7 @@ colcon build
 ### Usage
 
 ```bash
-# start the node
+# start the openni_tracker node
 ros2 run openni_tracker_ros2 openni_tracker
 
 # launch nodes openni_tracker and skeleton_markers
